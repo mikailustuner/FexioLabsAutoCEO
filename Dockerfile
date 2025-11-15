@@ -16,6 +16,7 @@ WORKDIR /app
 
 # Copy all files needed for workspace (package.json files first for better caching)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.base.json ./
 COPY packages ./packages
 COPY apps ./apps
 
@@ -72,6 +73,7 @@ WORKDIR /app
 
 # Copy package files and workspace structure
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.base.json ./
 COPY packages ./packages
 COPY apps ./apps
 
