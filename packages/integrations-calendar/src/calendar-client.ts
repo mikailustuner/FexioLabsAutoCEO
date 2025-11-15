@@ -14,7 +14,7 @@ export class MockCalendarClient implements CalendarClient {
   private clientId?: string;
   private clientSecret?: string;
   private refreshToken?: string;
-  private oauth2Client?: ReturnType<typeof google.auth.OAuth2>;
+  private oauth2Client?: InstanceType<typeof google.auth.OAuth2>;
 
   constructor(clientId?: string, clientSecret?: string, refreshToken?: string) {
     this.clientId = clientId;
