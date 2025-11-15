@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: flao-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-flao}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-flao_password}
+      POSTGRES_DB: ${POSTGRES_DB:-flao}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"  # Default 5433 to avoid conflict with existing PostgreSQL
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-flao}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - flao-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flao-api-gateway
+    environment:
+      # Database (internal port 5432, external port from POSTGRES_PORT env)
+      DATABASE_URL: postgresql://${POSTGRES_USER:-flao}:${POSTGRES_PASSWORD:-flao_password}@postgres:5432/${POSTGRES_DB:-flao}?schema=public
+      
+      # LLM Providers (optional)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      
+      # GitHub (optional)
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET:-}
+      
+      # Calendar (optional)
+      GOOGLE_CALENDAR_CLIENT_ID: ${GOOGLE_CALENDAR_CLIENT_ID:-}
+      GOOGLE_CALENDAR_CLIENT_SECRET: ${GOOGLE_CALENDAR_CLIENT_SECRET:-}
+      GOOGLE_CALENDAR_REFRESH_TOKEN: ${GOOGLE_CALENDAR_REFRESH_TOKEN:-}
+      
+      # WhatsApp (enabled by default in Docker with Chrome)
+      WHATSAPP_ENABLED: ${WHATSAPP_ENABLED:-true}
+      WHATSAPP_SESSION_DIR: ${WHATSAPP_SESSION_DIR:-.wwebjs_auth}
+      WHATSAPP_MONITORED_GROUPS: ${WHATSAPP_MONITORED_GROUPS:-}
+      WHATSAPP_AUTO_REPLY_ENABLED: ${WHATSAPP_AUTO_REPLY_ENABLED:-false}
+      
+      # ClickUp (optional)
+      CLICKUP_API_KEY: ${CLICKUP_API_KEY:-}
+      CLICKUP_TEAM_ID: ${CLICKUP_TEAM_ID:-}
+      
+      # Telegram (optional)
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_IDS: ${TELEGRAM_CHAT_IDS:-}
+      
+      # API Gateway
+      PORT: ${PORT:-3000}
+      NODE_ENV: ${NODE_ENV:-production}
+    ports:
+      - "${PORT:-3001}:3000"  # Default 3001 to avoid conflict with other services
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Persist WhatsApp session if enabled
+      - whatsapp_session:/app/.wwebjs_auth
+    networks:
+      - flao-network
+    restart: unless-stopped
+    command: >
+      sh -c "
+        echo 'Waiting for database to be ready...' &&
+        sleep 5 &&
+        cd /app &&
+        pnpm --filter @flao/db migrate:deploy &&
+        cd /app/apps/api-gateway &&
+        node dist/index.js
+      "
+
+volumes:
+  postgres_data:
+    driver: local
+  whatsapp_session:
+    driver: local
+
+networks:
+  flao-network:
+    driver: bridge
+

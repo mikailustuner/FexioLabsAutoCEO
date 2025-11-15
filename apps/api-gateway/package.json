@@ -1,0 +1,35 @@
+{
+  "name": "api-gateway",
+  "version": "1.0.0",
+  "description": "API Gateway for FLAO",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*",
+    "@flao/db": "workspace:*",
+    "@flao/shared-types": "workspace:*",
+    "@flao/integrations-github": "workspace:*",
+    "@flao/integrations-calendar": "workspace:*",
+    "@flao/integrations-whatsapp": "workspace:*",
+    "@flao/integrations-clickup": "workspace:*",
+    "@flao/integrations-telegram": "workspace:*",
+    "@flao/agents-ops": "workspace:*",
+    "fastify": "^4.25.2",
+    "dotenv": "^16.4.1",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
+

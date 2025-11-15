@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"],
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/db" },
+    { "path": "../../packages/integrations-github" },
+    { "path": "../../packages/integrations-calendar" },
+    { "path": "../../packages/integrations-whatsapp" },
+    { "path": "../../packages/integrations-clickup" },
+    { "path": "../../packages/integrations-telegram" },
+    { "path": "../../packages/agents-ops" }
+  ]
+}
+

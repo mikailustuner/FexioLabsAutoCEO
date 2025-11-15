@@ -1,0 +1,21 @@
+{
+  "name": "@flao/agents-pm",
+  "version": "1.0.0",
+  "description": "Project Manager Agent for FLAO - Task breakdown and assignment",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*",
+    "@flao/db": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
+

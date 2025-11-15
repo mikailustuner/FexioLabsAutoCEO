@@ -1,0 +1,28 @@
+{
+  "name": "@flao/integrations-calendar",
+  "version": "1.0.0",
+  "description": "Calendar integration for FLAO",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "echo 'Calendar package is disabled' && exit 0",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*",
+    "googleapis": "^128.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
+

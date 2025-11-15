@@ -1,0 +1,20 @@
+{
+  "name": "@flao/agents-client",
+  "version": "1.0.0",
+  "description": "Client Agent for FLAO - Handles client requests and briefs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
+

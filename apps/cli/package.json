@@ -1,0 +1,31 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "CLI for FLAO",
+  "type": "module",
+  "bin": {
+    "flao": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*",
+    "@flao/db": "workspace:*",
+    "@flao/integrations-github": "workspace:*",
+    "@flao/integrations-calendar": "workspace:*",
+    "@flao/integrations-whatsapp": "workspace:*",
+    "@flao/integrations-clickup": "workspace:*",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
+

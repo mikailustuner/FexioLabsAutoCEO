@@ -1,0 +1,20 @@
+{
+  "name": "@flao/agents-ceo",
+  "version": "1.0.0",
+  "description": "CEO Agent for FLAO - Strategic decision making",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "pnpm --filter @flao/core build && tsc --build",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
+

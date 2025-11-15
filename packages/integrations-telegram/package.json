@@ -1,0 +1,29 @@
+{
+  "name": "@flao/integrations-telegram",
+  "version": "1.0.0",
+  "description": "Telegram integration for FLAO",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*",
+    "node-telegram-bot-api": "^0.64.0"
+  },
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.0",
+    "typescript": "^5.3.3"
+  }
+}
+

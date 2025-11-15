@@ -1,0 +1,55 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Testing
+coverage
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+
+# Build outputs (will be built in Docker)
+dist
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.git
+.gitignore
+README.md
+.prettierrc
+.eslintrc*
+
+# WhatsApp session (will be in volume)
+.wwebjs_auth
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+

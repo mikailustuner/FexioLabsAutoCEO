@@ -1,0 +1,20 @@
+{
+  "name": "@flao/agents-cto",
+  "version": "1.0.0",
+  "description": "CTO Agent for FLAO - Architecture and technical decisions",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/core": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
+

@@ -1,0 +1,108 @@
+# Multi-stage build for FLAO API Gateway
+FROM node:20-slim AS base
+
+# Install pnpm
+RUN npm install -g pnpm@8
+
+# Install dependencies needed for building
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/*/package.json ./packages/*/
+COPY apps/*/package.json ./apps/*/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Build stage
+FROM base AS build
+
+# Copy source code
+COPY . .
+
+# Build all packages
+RUN pnpm build
+
+# Production stage
+FROM node:20-slim AS production
+
+# Install pnpm
+RUN npm install -g pnpm@8
+
+# Install runtime dependencies (for Prisma and Chrome for WhatsApp)
+RUN apt-get update && apt-get install -y \
+    openssl \
+    ca-certificates \
+    wget \
+    gnupg \
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/googlechrome-linux-keyring.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/googlechrome-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list \
+    && apt-get update \
+    && apt-get install -y \
+    google-chrome-stable \
+    fonts-liberation \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libatspi2.0-0 \
+    libcups2 \
+    libdbus-1-3 \
+    libdrm2 \
+    libgbm1 \
+    libgtk-3-0 \
+    libnspr4 \
+    libnss3 \
+    libwayland-client0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxkbcommon0 \
+    libxrandr2 \
+    xdg-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/*/package.json ./packages/*/
+COPY apps/*/package.json ./apps/*/
+
+# Install all dependencies (Prisma CLI needed for migrations)
+RUN pnpm install --frozen-lockfile
+
+# Copy built files from build stage
+COPY --from=build /app/packages ./packages
+COPY --from=build /app/apps ./apps
+
+# Copy Prisma schema
+COPY packages/db/prisma ./packages/db/prisma
+
+# Generate Prisma client
+WORKDIR /app/packages/db
+RUN pnpm generate
+
+# Set Chrome executable path for Puppeteer
+ENV CHROME_BIN=/usr/bin/google-chrome-stable
+
+# Set working directory to API Gateway
+WORKDIR /app/apps/api-gateway
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+
+# Start the application
+CMD ["node", "dist/index.js"]
+

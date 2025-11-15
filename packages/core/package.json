@@ -1,0 +1,36 @@
+{
+  "name": "@flao/core",
+  "version": "1.0.0",
+  "description": "Core abstractions and workflows for FLAO",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rm -rf dist",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@flao/db": "workspace:*",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@flao/agents-ceo": "workspace:*",
+    "@flao/agents-product": "workspace:*",
+    "@flao/agents-cto": "workspace:*",
+    "@flao/agents-pm": "workspace:*",
+    "@flao/agents-qa": "workspace:*",
+    "@flao/agents-release": "workspace:*",
+    "@flao/agents-ops": "workspace:*",
+    "@flao/agents-client": "workspace:*",
+    "typescript": "^5.3.3"
+  }
+}
+
