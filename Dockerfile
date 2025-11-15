@@ -20,7 +20,7 @@ COPY packages/*/package.json ./packages/*/
 COPY apps/*/package.json ./apps/*/
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Build stage
 FROM base AS build
@@ -77,7 +77,7 @@ COPY packages/*/package.json ./packages/*/
 COPY apps/*/package.json ./apps/*/
 
 # Install all dependencies (Prisma CLI needed for migrations)
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # Copy built files from build stage
 COPY --from=build /app/packages ./packages
