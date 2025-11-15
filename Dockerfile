@@ -26,9 +26,14 @@ RUN pnpm install
 # Build stage
 FROM base AS build
 
-# Source code is already copied in base stage, just build
+# Source code is already copied in base stage
+
+# Generate Prisma client first (required for TypeScript build)
+WORKDIR /app/packages/db
+RUN pnpm generate
 
 # Build all packages
+WORKDIR /app
 RUN pnpm build
 
 # Production stage
