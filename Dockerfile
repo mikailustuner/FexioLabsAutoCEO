@@ -1,8 +1,8 @@
 # Multi-stage build for FLAO API Gateway
 FROM node:20-slim AS base
 
-# Install pnpm
-RUN npm install -g pnpm@8
+# Install pnpm (version 9 to match lockfile)
+RUN npm install -g pnpm@9
 
 # Install dependencies needed for building
 RUN apt-get update && apt-get install -y \
@@ -34,8 +34,8 @@ RUN pnpm build
 # Production stage
 FROM node:20-slim AS production
 
-# Install pnpm
-RUN npm install -g pnpm@8
+# Install pnpm (version 9 to match lockfile)
+RUN npm install -g pnpm@9
 
 # Install runtime dependencies (for Prisma and Chrome for WhatsApp)
 RUN apt-get update && apt-get install -y \

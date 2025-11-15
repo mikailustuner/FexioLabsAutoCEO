@@ -47,7 +47,7 @@ FLAOA/
 ## Prerequisites
 
 - Node.js 20 or higher
-- pnpm 8 or higher
+- pnpm 9 or higher
 - PostgreSQL database
 
 ## Installation
@@ -632,6 +632,34 @@ docker-compose ps -a
 # Restart containers
 docker-compose restart
 ```
+
+**pnpm lockfile compatibility error:**
+If you see `ERR_PNPM_LOCKFILE_BREAKING_CHANGE` error:
+
+1. **Solution 1 (Recommended):** Update pnpm in Dockerfile (already fixed)
+   - Dockerfile now uses `pnpm@9` to match lockfile version 9.0
+   - Rebuild: `docker-compose build --no-cache`
+
+2. **Solution 2:** If still having issues, update lockfile locally:
+   ```bash
+   # Update pnpm to version 9
+   npm install -g pnpm@9
+   
+   # Regenerate lockfile
+   pnpm install
+   
+   # Commit the updated pnpm-lock.yaml
+   git add pnpm-lock.yaml
+   git commit -m "Update pnpm lockfile to version 9"
+   ```
+
+3. **Solution 3:** Use --no-frozen-lockfile (not recommended for production):
+   ```dockerfile
+   # In Dockerfile, change:
+   RUN pnpm install --frozen-lockfile
+   # To:
+   RUN pnpm install --no-frozen-lockfile
+   ```
 
 ## Future Enhancements
 
