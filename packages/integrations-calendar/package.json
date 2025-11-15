@@ -12,7 +12,7 @@
     }
   },
   "scripts": {
-    "build": "echo 'Calendar package is disabled' && exit 0",
+    "build": "tsc",
     "clean": "rm -rf dist",
     "lint": "eslint src --ext .ts",
     "test": "vitest run"
