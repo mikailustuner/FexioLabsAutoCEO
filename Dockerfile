@@ -14,10 +14,10 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy all files needed for workspace (package.json files first for better caching)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/*/package.json ./packages/*/
-COPY apps/*/package.json ./apps/*/
+COPY packages ./packages
+COPY apps ./apps
 
 # Install dependencies
 RUN pnpm install
@@ -25,8 +25,7 @@ RUN pnpm install
 # Build stage
 FROM base AS build
 
-# Copy source code
-COPY . .
+# Source code is already copied in base stage, just build
 
 # Build all packages
 RUN pnpm build
@@ -71,22 +70,20 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files and workspace structure
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY packages/*/package.json ./packages/*/
-COPY apps/*/package.json ./apps/*/
+COPY packages ./packages
+COPY apps ./apps
 
 # Install all dependencies (Prisma CLI needed for migrations)
 RUN pnpm install
 
-# Copy built files from build stage
+# Copy built files from build stage (overwrite source with built versions)
+# This includes all dist folders and Prisma schema
 COPY --from=build /app/packages ./packages
-COPY --from=build /app/apps ./apps
+COPY --from=build /app/apps/api-gateway ./apps/api-gateway
 
-# Copy Prisma schema
-COPY packages/db/prisma ./packages/db/prisma
-
-# Generate Prisma client
+# Generate Prisma client (schema is already copied from build stage)
 WORKDIR /app/packages/db
 RUN pnpm generate
 
